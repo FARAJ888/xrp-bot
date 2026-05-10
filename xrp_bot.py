@@ -5,22 +5,28 @@ from binance.client import Client
 from binance.enums import *
 import pandas as pd
 import numpy as np
+
+# ==============================================
+# ⚠️ تحذير أمني ⚠️
+# ==============================================
+# بعد تجربة البوت، احذف هذا المفتاح من Binance فوراً
+# ==============================================
+
 API_KEY = "xYgXGnaWJG1m0tlppwi2aghPpNWOnyY36yxhXjrSoGULXT2QpZ7AKtKmYAOQUcQM"
 API_SECRET = "rLi5sZIRPkISOBfjjaHOV6vbYP81WYwnMCxTv2ht9FPTEqfpbonhakSZ8IJplhfH"
 
 SYMBOL = "XRPUSDT"
-LEVERAGE = 10
+LEVERAGE = 5  # ← غيرتها من 10 إلى 5
 TRADE_USDT = 9
 TAKE_PROFIT = 0.02
 STOP_LOSS = 0.01
 TIMEFRAMES = ["15m", "1h", "4h"]
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s | %(levelname)s | %(message)s", handlers=[logging.StreamHandler()])
+logging.basicConfig(level=logging.INFO, format="%(asctime)s | %(levelname)s | %(message)s")
 log = logging.getLogger()
 
 client = Client(API_KEY, API_SECRET)
 
-# اختبار الاتصال
 try:
     client.futures_ping()
     log.info("✅ Binance connection successful")
