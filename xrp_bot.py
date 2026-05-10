@@ -1,63 +1,7 @@
-import time
-import logging
-import os
-from binance.client import Client
-from binance.enums import *
-import pandas as pd
-import numpy as np
-
-API_KEY = os.environ.get("API_KEY", "")
-API_SECRET = os.environ.get("API_SECRET", "")
-
-SYMBOL = "XRPUSDT"
-LEVERAGE = 10
-TRADE_USDT = 9
-TAKE_PROFIT = 0.02
-STOP_LOSS = 0.01
-TIMEFRAMES = ["15m", "1h", "4h"]
-
-logging.basicConfig(level=logging.INFO, format="%(asctime)s | %(levelname)s | %(message)s", handlers=[logging.StreamHandler()])
-log = logging.getLogger()
-
-client = Client(API_KEY, API_SECRET)
-
-def set_leverage():
-    try:
-        client.futures_change_leverage(symbol=SYMBOL, leverage=LEVERAGE)
-        log.info(f"تم تعيين الرافعة: {LEVERAGE}x")
-    except Exception as e:
-        log.error(f"خطأ في الرافعة: {e}")
-
-def get_klines(timeframe, limit=200):
-    klines = client.futures_klines(symbol=SYMBOL, interval=timeframe, limit=limit)
-    df = pd.DataFrame(klines, columns=["time","open","high","low","close","volume","close_time","quote_vol","trades","taker_base","taker_quote","ignore"])
-    df["close"] = df["close"].astype(float)
-    df["volume"] = df["volume"].astype(float)
-    return df
-
-def calc_ema(series, period):
-    return series.ewm(span=period, adjust=False).mean()
-
-def calc_rsi(series, period=6):
-    delta = series.diff()
-    gain = delta.where(delta > 0, 0).rolling(period).mean()
-    loss = -delta.where(delta < 0, 0).rolling(period).mean()
-    rs = gain / loss
-    return 100 - (100 / (1 + rs))
-
-def calc_macd(series):
-    ema12 = calc_ema(series, 12)
-    ema26 = calc_ema(series, 26)
-    dif = ema12 - ema26
-    dea = calc_ema(dif, 9)
-    return dif, dea
-
-def analyze(timeframe):
-    df = get_klines(timeframe)
-    close = df["close"]
-    volume = df["volume"]
-    ema20 = calc_ema(close, 20)
-    ema55 = calc_ema(close, 55)
+try:
+    print(client.futures_account())
+except Exception as e:
+    print(f"خطأ الاتصال: {e}")
     rsi = calc_rsi(close, 6)
     dif, dea = calc_macd(close)
     vol_ma10 = volume.rolling(10).mean()
