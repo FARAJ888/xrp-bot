@@ -6,8 +6,23 @@ from binance.enums import *
 import pandas as pd
 import numpy as np
 
-API_KEY = "YOUR_API_KEY_HERE"
-API_SECRET = "YOUR_API_SECRET_HERE"
+# ==============================================
+# ⚠️ تحذير أمني مهم جداً ⚠️
+# ==============================================
+# هذه الطريقة غير آمنة! مفاتيحك ستظهر في الكود.
+# الأفضل استخدام:
+# API_KEY = os.environ.get("API_KEY")
+# API_SECRET = os.environ.get("API_SECRET")
+#
+# ولكن بما أنك طلبت وضعها في الكود، افعل التالي:
+# 1. جرب البوت لمدة قصيرة فقط
+# 2. بعد التجربة، اذهب إلى Binance واحذف هذا المفتاح فوراً
+# 3. لا ترفع هذا الكود إلى GitHub أبداً
+# ==============================================
+
+# ضع مفاتيحك هنا (استبدل ما بين الأقواس)
+API_KEY = "xYgXGnaWJG1m0tlppwi2aghPpNWOnyY36yxhXjrSoGULXT2QpZ7AKtKmYAOQUcQM"
+API_SECRET = "rLi5sZIRPkISOBfjjaHOV6vbYP81WYwnMCxTv2ht9FPTEqfpbonhakSZ8IJplhfH"
 
 SYMBOL = "XRPUSDT"
 LEVERAGE = 10
