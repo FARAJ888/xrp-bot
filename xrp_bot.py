@@ -1,12 +1,13 @@
 import time
 import logging
+import os
 from binance.client import Client
 from binance.enums import *
 import pandas as pd
 import numpy as np
 
-API_KEY = "ضع_API_KEY_هنا"
-API_SECRET = "ضع_API_SECRET_هنا"
+API_KEY = os.environ.get("API_KEY", "")
+API_SECRET = os.environ.get("API_SECRET", "")
 
 SYMBOL = "XRPUSDT"
 LEVERAGE = 10
@@ -15,7 +16,7 @@ TAKE_PROFIT = 0.02
 STOP_LOSS = 0.01
 TIMEFRAMES = ["15m", "1h", "4h"]
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s | %(levelname)s | %(message)s", handlers=[logging.FileHandler("bot.log"), logging.StreamHandler()])
+logging.basicConfig(level=logging.INFO, format="%(asctime)s | %(levelname)s | %(message)s", handlers=[logging.StreamHandler()])
 log = logging.getLogger()
 
 client = Client(API_KEY, API_SECRET)
@@ -85,8 +86,8 @@ def open_trade(signal, price):
     side = SIDE_BUY if signal == "LONG" else SIDE_SELL
     try:
         client.futures_create_order(symbol=SYMBOL, side=side, type=ORDER_TYPE_MARKET, quantity=qty)
-        tp_price = round(price * (1 + TAKE_PROFIT if signal == "LONG" else 1 - TAKE_PROFIT), 4)
-        sl_price = round(price * (1 - STOP_LOSS if signal == "LONG" else 1 + STOP_LOSS), 4)
+        tp_price = round(price * (1 + TAKE_PROFIT) if signal == "LONG" else price * (1 - TAKE_PROFIT), 4)
+        sl_price = round(price * (1 - STOP_LOSS) if signal == "LONG" else price * (1 + STOP_LOSS), 4)
         close_side = SIDE_SELL if signal == "LONG" else SIDE_BUY
         client.futures_create_order(symbol=SYMBOL, side=close_side, type=FUTURE_ORDER_TYPE_TAKE_PROFIT_MARKET, stopPrice=tp_price, closePosition=True, timeInForce=TIME_IN_FORCE_GTC)
         client.futures_create_order(symbol=SYMBOL, side=close_side, type=FUTURE_ORDER_TYPE_STOP_MARKET, stopPrice=sl_price, closePosition=True, timeInForce=TIME_IN_FORCE_GTC)
